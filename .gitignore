@@ -1,0 +1,5 @@
+# Ignorar la carpeta completa de mi API
+
+
+# Ignorar cualquier carpeta node_modules en el proyecto
+node_modules/

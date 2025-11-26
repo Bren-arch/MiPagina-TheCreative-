@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Vigilancia Epidemiológica</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="../public/css/style.css" />
+</head>
+<body>
+  <div id="app">
+    <div id="inicio" class="card">
+      <h2>Selecciona tu tipo de usuario</h2>
+      <label for="selectTipo">Tipo:</label>
+      <select id="selectTipo" onchange="seleccionarTipo()">
+        <option value="">-- Seleccione --</option>
+        <option value="operador">Operador</option>
+        <option value="admin">Administrador</option>
+      </select>
+    </div>
+
+    <div id="loginAdmin" class="hidden card">
+      <h2>Ingreso de Administrador</h2>
+      <label for="adminPassword">Contraseña:</label>
+      <input type="password" id="adminPassword" required placeholder="Ingrese la contraseña"/>
+      <button onclick="verificarAdmin()">Ingresar</button>
+      <button type="button" onclick="volverInicio()">Volver</button>
+    </div>
+
+    <div id="opcionesAdmin" class="hidden card">
+      <h2>Opciones de Administrador</h2>
+      <button onclick="elegirContinuarRegistro()">Continuar con Registro</button>
+      <button onclick="mostrarAdminPanel()">Ver Registros</button>
+      <button type="button" onclick="volverInicio()">Volver</button>
+    </div>
+
+    <form id="formUsuario" class="hidden card">
+      <h2>Formulario de Registro</h2>
+      
+      <div id="rolRegistroContainer" style="display: none;"> 
+          <label for="rolRegistro">Rol del Usuario a registrar:</label>
+          <select id="rolRegistro" required title="Seleccione el rol del Usuario">
+            <option value="operador">Operador</option>
+            <option value="admin">Administrador</option>
+          </select>
+      </div>
+
+      <p>Fecha de registro: <strong id="fechaRegistro"></strong></p>
+      
+      <label for="nombreUsuario">Nombre:</label>
+      <input type="text" id="nombreUsuario" required>
+
+      <label for="emailUsuario">Email(Identificación):</label>
+      <input type="email" id="emailUsuario" required placeholder="tu.email@ejemplo.com">
+
+      <label>Enfermedades (Selección Múltiple):</label>
+      <div id="enfermedadesContainer" style="text-align: left; margin-bottom: 10px; display: flex; flex-wrap: wrap; justify-content: space-around;">
+    
+        <label style="margin-right: 15px;">
+          <input type="checkbox" name="enfermedad_multiple" value="dengue"> Dengue
+        </label>
+        <label style="margin-right: 15px;">
+          <input type="checkbox" name="enfermedad_multiple" value="leishmaniasis"> Leishmaniasis
+        </label>
+        <label style="margin-right: 15px;">
+          <input type="checkbox" name="enfermedad_multiple" value="chikungunya"> Chikungunya
+        </label>
+        <label style="margin-right: 15px;">
+          <input type="checkbox" name="enfermedad_multiple" value="otros"> Otros
+        </label>
+  </div> 
+  <input type="hidden" id="enfermedad" required>
+
+<div class="coordenadas-group">
+    
+    <div class="coord-item">
+        <label for="lat">Latitud</label>
+        <input type="number" id="lat" step="any" required placeholder="Ej: -24.7821">
+    </div>
+
+    <div class="coord-item">
+        <label for="lng">Longitud</label>
+        <input type="number" id="lng" step="any" required placeholder="Ej: -65.4121">
+    </div>
+
+</div>
+      <button type="button" onclick="obtenerUbicacionAutomatica()">Usar Ubicación Actual</button>
+
+      <div class="form-group">
+        <label for="estadoInicial">Visibilidad en el Mapa (Estado del Caso):</label>
+        <select id="estadoInicial" name="estadoInicial">
+            <option value="activo" selected>Caso Activo (Mostrar en el Mapa)</option>
+            <option value="reporte">Solo Reporte Interno (Ocultar del Mapa)</option>
+        </select>
+      </div>
+
+      <label for="apreciasiones">Apreciaciones (síntomas/comentarios):</label>
+      <textarea id="apreciaciones" required placeholder="Detalles o sintomas"></textarea>
+
+      <label for="foto">Foto(opcional):</label>
+      <input type="file" id="foto" accept="image/*" />
+
+      <button type="submit" onclick="mostrarResumen()">Enviar Registro</button>
+      <button type="button" onclick="cancelarRegistro()">Cancelar</button>
+    </form>
+
+    <div id="resumen" class="hidden card">
+      <h2>Información en proceso</h2>
+      <p id="resumenTexto">Tu información está siendo procesada. ¡Gracias por tu colaboración!</p>
+      <button onclick="mostrarMapaSolo()">Ver Ubicación en Mapa</button>
+      <button onclick="volverInicio()">Volver al inicio</button>
+    </div>
+
+    <div id="mapaContainer" class="hidden card">
+      <h2>Mapa de casos</h2>
+      <div id="map"></div>
+      <button onclick="volverInicio()">Volver al inicio</button>
+    </div>
+
+    <div id="adminPanel" class="hidden card admin-view-container">
+        <h2>Gestión y Visualización de Registros</h2>
+        
+        <div class="admin-controls">
+            <label for="filtroEnfermedad">Filtrar por Enfermedad:</label>
+            <select id="filtroEnfermedad" onchange="mostrarAdminPanel()">
+                <option value="todos">Todos</option>
+                <option value="dengue">Dengue</option>
+                <option value="leishmaniasis">Leishmaniasis</option>
+                <option value="chikungunya">Chikungunya</option>
+                <option value="otros">Otros</option>
+            </select>
+        </div>
+
+    <div class="admin-content-wrapper">
+        
+        <div id="panelRegistros" class="content-panel">
+          <h3>Lista de Casos</h3>
+          <ul id="listaUsuarios">
+            </ul>
+        </div>
+        
+        <div id="mapAdminContainer" class="content-panel map-panel-shared">
+            <div id="mapAdmin" style="height: 100%;"></div>
+        </div>
+  </div>
+
+        <button onclick="elegirContinuarRegistro()">Agregar Nuevo Registro</button>
+      <button onclick="volverInicio()">Volver</button>
+    </div>  </div>  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="../public/script.js"></script>
+</body>
+</html>

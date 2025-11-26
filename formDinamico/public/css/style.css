@@ -1,0 +1,220 @@
+body {
+    background-color: #1f3b73;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: white;
+    margin: 0;
+    padding: 20px 0;
+}
+
+.card {
+    background-color: #86b6f6;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 15px rgba(0,0,0,0.3);
+    text-align: center;
+    width: 90%;
+    /* Aumentamos el ancho máximo de la tarjeta para el mapa */
+    max-width: 650px; 
+    margin: 10px auto; 
+    color: #333;
+}
+
+h2 {
+    color: #1f3b73;
+}
+
+button {
+    margin: 8px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    background-color: #ffccf9;
+    color: #333;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #ffe6f7;
+}
+
+.hidden {
+    display: none !important;
+}
+
+input, textarea, select {
+    width: 90%;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+/* Estilos específicos para el panel de administrador */
+#listaUsuarios {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#listaUsuarios li {
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    color: #333;
+    border-left: 5px solid #1f3b73;
+}
+
+.delete-btn {
+    float: right;
+    margin: 0;
+    padding: 5px 10px;
+    background-color: #ff5555;
+    color: white;
+    font-size: 0.8rem;
+}
+
+.delete-btn:hover {
+    background-color: #cc0000;
+}
+
+.detalle-registro {
+    font-size: 0.9em;
+    color: #555;
+    margin-top: 5px;
+}
+
+/* ESTILO DEL MAPA GRANDE 
+#map {
+    /* Aumentamos la altura vertical del mapa 
+    height: 600px; 
+    border-radius: 1rem;
+    width: 100%;
+}*/
+
+
+/* Nuevo estilo para el contenedor que queremos que ocupe toda la pantalla */
+.full-map-container {
+    /* Anula las propiedades de centrado y restricción del .card */
+    width: 100vw !important; /* Ancho completo de la ventana */
+    max-width: none !important; /* Quita el límite de 650px */
+    height: 100vh !important; /* Alto completo de la ventana */
+    border-radius: 0 !important; /* Opcional: Quitar bordes redondeados */
+    margin: 0 !important;
+}
+
+/* * ESTILO DEL MAPA GRANDE 
+* Lo cambiamos para que ocupe el 100% del nuevo contenedor 
+*/
+#map {
+    height: 100%; /* 100% de la altura del contenedor (que será 100vh) */
+    width: 100%;
+    border-radius: 0; /* Opcional: Quitar bordes redondeados */
+}
+/* para que el mapa tenga un espacio por defecto */
+#mapaContainer {
+    /* Le da una altura por defecto al contenedor del mapa cuando no está en pantalla completa */
+    min-height: 400px; 
+}
+/* Modificación necesaria para el body */
+body.map-view {
+    /* Quita el centrado vertical que interfiere con la vista de pantalla completa */
+    align-items: flex-start; 
+    padding: 0;
+}
+/* Sincroniza y divide el espacio entre Latitud y Longitud */
+.coordenadas-group {
+    display: flex;
+    justify-content: space-between; /* Distribuye el espacio entre sí */
+    gap: 10px; /* Espacio horizontal entre los dos campos */
+    margin-bottom: 15px; 
+}
+
+/* Asegura que cada columna (Latitud y Longitud) ocupe la mitad del espacio */
+.coord-item {
+    flex: 1; /* Hace que Latitud y Longitud ocupen 50% del espacio cada uno */
+    display: flex;
+    flex-direction: column; /* Apila la etiqueta y el input verticalmente */
+}
+
+/* Asegura que los inputs llenen su espacio de 100% dentro de coord-item */
+.coordenadas-group input {
+    width: 100%;
+}
+
+
+/* === NUEVOS ESTILOS PARA LA VISTA ADMINISTRADOR COMPARTIDA === */
+
+
+/* Contenedor Principal de la vista de administrador */
+.admin-view-container {
+    /* Aumentamos el ancho máximo para dar espacio al mapa */
+    max-width: 1200px; 
+    text-align: left; /* Alineamos el texto a la izquierda dentro del card */
+}
+
+/* Contenedor Flexible para Lista y Mapa */
+.admin-content-wrapper {
+    display: flex; /* Habilita Flexbox */
+    gap: 15px; /* Espacio entre la lista y el mapa */
+    margin-top: 15px;
+    /* Define una altura para que el mapa y la lista no sean infinitos */
+    height: 550px; 
+}
+
+/* Estilo Base de los Paneles (Lista y Mapa) */
+.content-panel {
+    flex: 1; /* Hace que ambos paneles compartan el espacio por igual (50/50) */
+    padding: 0;
+}
+
+/* Estilo Específico del Panel de Registros */
+#panelRegistros {
+    overflow-y: auto; /* Permite scroll solo en la lista */
+    border-right: 1px solid #ccc;
+    padding-right: 15px; /* Espacio del lado derecho antes de la barra */
+}
+
+/* Estilo Específico del Mapa de Administrador */
+.map-panel-shared {
+    min-height: 550px; 
+    padding: 0; /* Quita el padding interno para que el mapa ocupe todo */
+}
+
+/* Asegura que el div del mapa dentro del contenedor compartido tenga altura */
+#mapAdmin {
+    height: 100%; 
+    border-radius: 10px;
+}
+
+/* Media Query para Pantallas Pequeñas (Móviles) */
+@media (max-width: 768px) {
+    .admin-view-container {
+        /* Volvemos a un ancho más estándar para móviles */
+        max-width: 90%; 
+    }
+    .admin-content-wrapper {
+        flex-direction: column; /* Apila los elementos verticalmente */
+        height: auto; /* Permite que ocupe más altura en móvil */
+    }
+    
+    #panelRegistros {
+        border-right: none;
+        border-bottom: 1px solid #ccc;
+        padding-right: 0;
+        padding-bottom: 15px;
+        max-height: 300px; /* Restringe la altura de la lista en móvil */
+    }
+    
+    .map-panel-shared {
+        min-height: 300px; /* Reducimos la altura del mapa en móvil */
+    }
+}
